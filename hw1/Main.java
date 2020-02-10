@@ -9,11 +9,12 @@ public class Main{
  
         int[][] tests = createBatch();
         for(int[] test : tests){
-            System.out.print(test.length);
+            System.out.print("Input Size: " + test.length);
             System.out.println("");
             System.out.print("Merge Sort: "+time("merge", test)[1]+"ms");
             System.out.print(", ");
             System.out.print("Insertion Sort: "+time("insertion", test)[1]+"ms");
+            System.out.println("");
             System.out.println("");
         }
 
