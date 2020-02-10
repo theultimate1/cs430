@@ -5,6 +5,8 @@ public class Main{
 
     public static void main(String[]args){
         System.out.println("Hello World");
+
+
     }
 
 
@@ -35,5 +37,17 @@ public class Main{
     public int[] mergeSort(int[] arr){
 
         return arr;
+    }
+
+    public int[] combine(int[] arr1, int arr2[]){
+        
+        int newLength = arr1.length + arr2.length;
+        int finalArr[] = new int[newLength];
+        while(arr1.length > 0 && arr2.length > 0){
+            int ptr1 = arr1.length - 1;
+            int ptr2 = arr2.length - 1;
+            if(arr1[ptr1] <= arr2[ptr2])
+        }
+        return arr1;
     }
 }
