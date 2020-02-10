@@ -1,17 +1,28 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+
+
 public class Main{
 
     public static void main(String[]args){
-        System.out.println("Hello World");
+ 
+        int[][] tests = createBatch();
+        for(int[] test : tests){
+            System.out.print(test.length);
+            System.out.println("");
+            System.out.print("Merge Sort: "+time("merge", test)[1]+"ms");
+            System.out.print(", ");
+            System.out.print("Insertion Sort: "+time("insertion", test)[1]+"ms");
+            System.out.println("");
+        }
 
 
     }
 
 
     /*Insertion Sort*/
-    public int[] insertionSort(int[] arr){
+    public static int[] insertionSort(int[] arr){
         // Iterate from 1 to end of array
         for (int i = 1; i < arr.length; i++) { 
             // the variable we want to be moving into the "right" place
@@ -34,20 +45,99 @@ public class Main{
 
 
     /*Merge Sort*/
-    public int[] mergeSort(int[] arr){
+    public static int[] mergeSort(int[] arr){
+        int length = arr.length;
+        if(length == 1){
+            return arr;
+        }
+        int middle = (length / 2);
+        int[] arr1 = new int[middle];
+        int[] arr2 = new int[length-middle];
+        for(int i = 0; i < middle; i++){
+            arr1[i] = arr[i];
+        }
+        for(int j = 0; j < length-middle; j++){
+            arr2[j] = arr[middle + j];
+        }
+        return combine(mergeSort(arr1), mergeSort(arr2));
 
-        return arr;
     }
 
-    public int[] combine(int[] arr1, int arr2[]){
+    public static int[] combine(int[] arr1, int arr2[]){
         
         int newLength = arr1.length + arr2.length;
         int finalArr[] = new int[newLength];
-        while(arr1.length > 0 && arr2.length > 0){
-            int ptr1 = arr1.length - 1;
-            int ptr2 = arr2.length - 1;
-            if(arr1[ptr1] <= arr2[ptr2])
+        int ptr1 = 0, ptr2 = 0, ptr3 = 0;
+ 
+        while(ptr1 < arr1.length && ptr2 < arr2.length){
+            if(arr1[ptr1] <= arr2[ptr2]){
+                finalArr[ptr3] = arr1[ptr1];
+                ptr1++;
+            }
+            else{
+                finalArr[ptr3] = arr2[ptr2];
+                ptr2++;
+            }
+            ptr3++;            
         }
-        return arr1;
+        if(ptr1 != arr1.length){
+            while(ptr3 < newLength){
+                finalArr[ptr3] = arr1[ptr1];
+                ptr1++;
+                ptr3++;
+            }
+        }
+        else{
+            while(ptr3 < newLength){
+                finalArr[ptr3] = arr2[ptr2];
+                ptr2++;
+                ptr3++;
+            }
+        }
+
+        return finalArr;
+    }
+
+    // Creates an individual test array with size paramter
+    public static int[] genTest(int size){
+        int[] test = new int[size];
+        for(int i = 0; i < size; i++){
+            Random rnd = new Random();
+            test[i] = rnd.nextInt(20);
+        }
+        return test;
+    }
+    
+    // Creates batch of tests using genTest function
+    public static int[][] createBatch(){
+        
+        int[] sizes = new int[]{100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+        int scalar = 100;
+        int size = sizes.length;
+        int[][] batch = new int[size][size];
+        for(int i = 0; i < size; i++){
+            batch[i] = genTest(sizes[i] * scalar);
+        }
+        return batch;
+    }
+
+    /* 
+        Timer function that takes string representing sort method and array of numbers to be passed in
+        Returns int array [<size of the input array>, <time in ms it took to complete sorting>]
+    */
+    public static int[] time(String method, int[] paramArr){
+        int start = (int)(System.currentTimeMillis());
+            if (method.equals("insertion")){
+                insertionSort(paramArr);
+            }
+            else if (method.equals("merge")){
+                mergeSort(paramArr);
+            }
+            else{
+                System.out.println("INVALID INPUT");
+            }
+
+        int end = (int)System.currentTimeMillis(); 
+        return new int[]{(paramArr.length), (end-start)};
     }
 }
